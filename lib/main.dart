@@ -3,11 +3,16 @@
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:kyc/face_matching.dart';
+import 'package:kyc/views/bio_pass_view.dart';
+import 'package:kyc/views/face_matching_view.dart';
+import 'package:kyc/views/mask_detector_view.dart';
+import 'package:kyc/views/selfie_segmentation.dart';
+import 'package:kyc/views/text_recognition_view.dart';
 import 'package:kyc/views/face_detector_view.dart';
 import 'package:kyc/painter/face_painter.dart';
+import 'views/selfie_segmentation.dart';
 
 void main() async {
   runApp(const MyApp());
@@ -41,8 +46,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String image = '', newImage = '';
   bool processing = false;
-  FaceDetector faceDetector = GoogleMlKit.vision.faceDetector(
-    FaceDetectorOptions(
+  FaceDetector faceDetector = FaceDetector(
+    options: FaceDetectorOptions(
       enableContours: true,
       enableClassification: true,
     ),
@@ -109,6 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   : 'You have pushed the button this many times:',
             ),
             ExpansionTile(
+              initiallyExpanded: true,
               title: const Text('Vision APIs'),
               children: [
                 CustomCard(
@@ -124,6 +130,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 CustomCard('Match Faces', FaceMatchingScreen(image: image)),
+                const CustomCard('Text Recognition', TextRecognition()),
+                const CustomCard('Object Detector', MaskDetectorView()),
+                const CustomCard('Pio Pass', BioPassView()),
+                CustomCard('Selfie Segmentation', SelfieSegmenterView()),
               ],
             ),
             if (image != '') Image.file(File(image)),
